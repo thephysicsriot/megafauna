@@ -1,11 +1,7 @@
 import os
 from flask import Flask, jsonify
 from dotenv import load_dotenv
-from mongoengine import connect, Document, StringField
-
-class User(Document):
-    name = StringField()
-    email = StringField()
+from mongoengine import connect
 
 
 def create_app(test_config=None):
@@ -25,10 +21,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route('/user')
-    # just testing db connection
-    def user():
-        user = User.objects(name='Kristen').first()
-        return jsonify(user.name)
+    from .blueprints import auth
+    app.register_blueprint(auth.AuthBlueprint)
+
 
     return app
