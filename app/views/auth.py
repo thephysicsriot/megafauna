@@ -1,13 +1,16 @@
 from flask import request
 from app.models.user import User
 from mongoengine import NotUniqueError
+from flask.views import MethodView
 
 
-def register():
-    return 'Testing blueprint set up'
-    if request.method == 'POST':
-        email = request.form['username']
-        password = request.form['password']
+class RegisterView(MethodView):
+
+    def post(self):
+        payload = request.get_json()
+
+        email = payload.get('email')
+        password = payload.get('password')
         error = None
 
         if not email:
@@ -25,3 +28,4 @@ def register():
                 error = f"User {email} is already registered."
             else:
                 return 'You\'re registered!'
+        return error
