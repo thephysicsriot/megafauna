@@ -1,20 +1,19 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, session, g
 from dotenv import load_dotenv
 from mongoengine import connect
 
 
-def create_app(test_config=None):
+def create_app():
     app = Flask(__name__, instance_relative_config=True)
     # Load config from a .env file:
     load_dotenv()
+    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
     MONGODB_URI = os.environ['MONGODB_URI']
     connect(host=MONGODB_URI)
 
-    if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(test_config)
+    if int(os.environ['DEBUG']):
+        app.debug = True
 
     try:
         os.makedirs(app.instance_path)
@@ -22,7 +21,15 @@ def create_app(test_config=None):
         pass
 
     from .blueprints import auth
+    from .blueprints import characters
     app.register_blueprint(auth.AuthBlueprint)
+    app.register_blueprint(characters.CharactersBlueprint)
 
+    @app.before_request
+    def load_user():
+        if session.get('user_id'):
+            g.user_id = session.get('user_id')
+        else:
+            g.user_id = None
 
     return app
