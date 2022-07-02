@@ -33,3 +33,9 @@ class GetTimelineView(MethodView):
         timeline = Timeline.objects(id=pk).first()
         timeline.modify(**json)
         return jsonify(timeline.to_json())
+
+    @login_required
+    def delete(self, pk):
+        timeline = Timeline.objects(id=pk).first()
+        timeline.delete()
+        return jsonify(f'Document {pk} was deleted')

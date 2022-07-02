@@ -33,3 +33,9 @@ class GetCharacterView(MethodView):
         character = Character.objects(id=pk).first()
         character.modify(**json)
         return jsonify(character.to_json())
+
+    @login_required
+    def delete(self, pk):
+        character = Character.objects(id=pk).first()
+        character.delete()
+        return jsonify(f'Document {pk} was deleted')
