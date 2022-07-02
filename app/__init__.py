@@ -22,11 +22,11 @@ def create_app():
 
     from .blueprints import auth
     from .blueprints import characters
-    from .blueprints import sessions
+    from .blueprints import game_sessions
     from .blueprints import timelines
     app.register_blueprint(auth.AuthBlueprint)
     app.register_blueprint(characters.CharactersBlueprint)
-    app.register_blueprint(sessions.SessionsBlueprint)
+    app.register_blueprint(game_sessions.GameSessionsBlueprint)
     app.register_blueprint(timelines.TimelinesBlueprint)
 
     @app.before_request
