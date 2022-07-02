@@ -22,8 +22,10 @@ def create_app():
 
     from .blueprints import auth
     from .blueprints import characters
+    from .blueprints import timelines
     app.register_blueprint(auth.AuthBlueprint)
     app.register_blueprint(characters.CharactersBlueprint)
+    app.register_blueprint(timelines.TimelinesBlueprint)
 
     @app.before_request
     def load_user():
