@@ -1,5 +1,5 @@
 import functools
-from flask import request, session, g
+from flask import jsonify, request, session, g, abort
 from app.models.user import User
 from mongoengine import NotUniqueError
 from flask.views import MethodView
@@ -22,21 +22,18 @@ class LoginView(MethodView):
         payload = request.get_json()
         email = payload.get('email')
         password = payload.get('password')
-        error = None
 
         user = User.objects(email=email).first()
 
         if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user.password, password):
-            error = 'Incorrect password.'
+            return jsonify(status_code=401, text='Incorrect email.'), 401
+        if not check_password_hash(user.password, password):
+            return jsonify(status_code=401, text='Incorrect password.'), 401
 
-        if error is None:
+        else:
             session.clear()
             session['user_id'] = str(user.id)
-            return 'You are logged in'
-
-        return 'Incorrect email or password'
+            return jsonify(text='Login successful.'), 200
 
 class RegisterView(MethodView):
 
@@ -44,21 +41,19 @@ class RegisterView(MethodView):
         payload = request.get_json()
         email = payload.get('email')
         password = payload.get('password')
-        error = None
 
         if not email:
-            error = 'Email is required.'
-        elif not password:
-            error = 'Password is required.'
+            return jsonify(status_code=400, text='Email is required.'), 400
+        if not password:
+            return jsonify(status_code=400, text='Password is required.'), 400
 
         hashed_password = generate_password_hash(password) # going to use bcrypt to hash
 
-        if error is None:
-            try:
-                user = User(email=email, password=hashed_password)
-                user.save()
-            except NotUniqueError:
-                error = f"User {email} is already registered."
-            else:
-                return 'You\'re registered!'
-        return error
+        try:
+            user = User(email=email, password=hashed_password)
+            user.save()
+        except NotUniqueError as e:
+            return jsonify(status_code=400, text=f'User {email} is already registered.', error=repr(e)), 400
+        else:
+            return jsonify(status_code=200, text='Register successful.'), 200
+
