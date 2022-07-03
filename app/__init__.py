@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, session, g
+from flask import Flask, session, g
 from dotenv import load_dotenv
 from mongoengine import connect
 from app.config import configs

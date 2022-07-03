@@ -15,6 +15,7 @@ class DevelopmentConfig(BaseConfig):
 
 class TestingConfig(BaseConfig):
     TESTING = True
+    MONGODB_URI = 'mongomock://localhost'
 
 configs = {
     "production": ProductionConfig,
