@@ -1,6 +1,6 @@
 from mongoengine import Document, StringField, ObjectIdField
 from marshmallow import Schema, fields
-
+from bson.objectid import ObjectId
 
 class CharSchema(Schema):
     _id = fields.Str()
@@ -11,7 +11,7 @@ class CharSchema(Schema):
 
 
 class Character(Document):
-    _id = ObjectIdField()
+    _id = ObjectIdField(default=lambda: ObjectId(), primary_key=True)
     name = StringField()
     race = StringField()
     player_class = StringField()

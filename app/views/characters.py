@@ -17,7 +17,7 @@ class ListCharactersView(MethodView):
         json = request.get_json()
         character = Character(**json)
         character.save()
-        return jsonify(character.to_json())
+        return Character.serialize(character)
 
 
 class GetCharacterView(MethodView):
@@ -25,17 +25,17 @@ class GetCharacterView(MethodView):
     @login_required
     def get(self, pk):
         character = Character.objects(_id=pk).first()
-        return jsonify(character.serialize())
+        return Character.serialize(character)
 
     @login_required
     def patch(self, pk):
         json = request.get_json()
-        character = Character.objects(id=pk).first()
+        character = Character.objects(_id=pk).first()
         character.modify(**json)
-        return jsonify(character.to_json())
+        return Character.serialize(character)
 
     @login_required
     def delete(self, pk):
-        character = Character.objects(id=pk).first()
+        character = Character.objects(_id=pk).first()
         character.delete()
         return jsonify(f'Document {pk} was deleted')
