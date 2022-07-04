@@ -9,8 +9,8 @@ class ListCharactersView(MethodView):
     @login_required
     def get(self):
         characters = Character.objects().all()
-        characters = [c.to_json() for c in characters]
-        return jsonify(characters)
+        characters = Character.serialize_many(characters)
+        return {'characters': characters}
 
     @login_required
     def post(self):
@@ -24,8 +24,8 @@ class GetCharacterView(MethodView):
 
     @login_required
     def get(self, pk):
-        character = Character.objects(id=pk).first()
-        return jsonify(character.to_json())
+        character = Character.objects(_id=pk).first()
+        return jsonify(character.serialize())
 
     @login_required
     def patch(self, pk):
