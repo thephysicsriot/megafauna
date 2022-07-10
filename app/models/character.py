@@ -2,7 +2,7 @@ from mongoengine import Document, StringField, ObjectIdField
 from marshmallow import Schema, fields
 from bson.objectid import ObjectId
 
-class CharSchema(Schema):
+class CharacterSchema(Schema):
     _id = fields.Str()
     name = fields.Str()
     race = fields.Str()
@@ -18,11 +18,11 @@ class Character(Document):
     avatar = StringField()
 
     def serialize(self):
-        schema = CharSchema()
+        schema = CharacterSchema()
         return schema.dump(self)
 
     @classmethod
     def serialize_many(cls, qs):
-        schema = CharSchema(many=True)
+        schema = CharacterSchema(many=True)
         return schema.dump(qs)
 
