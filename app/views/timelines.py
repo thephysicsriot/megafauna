@@ -17,7 +17,7 @@ class ListTimelinesView(MethodView):
         json = request.get_json()
         timeline = Timeline(**json)
         timeline.save()
-        return Timeline.serialize(timeline)
+        return timeline.serialize()
 
 
 class GetTimelineView(MethodView):
@@ -25,14 +25,14 @@ class GetTimelineView(MethodView):
     @login_required
     def get(self, pk):
         timeline = Timeline.objects(_id=pk).first()
-        return Timeline.serialize(timeline)
+        return timeline.serialize()
 
     @login_required
     def patch(self, pk):
         json = request.get_json()
         timeline = Timeline.objects(_id=pk).first()
         timeline.modify(**json)
-        return Timeline.serialize(timeline)
+        return timeline.serialize()
 
     @login_required
     def delete(self, pk):

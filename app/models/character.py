@@ -2,6 +2,7 @@ from mongoengine import Document, StringField, ObjectIdField
 from marshmallow import Schema, fields
 from bson.objectid import ObjectId
 
+
 class CharacterSchema(Schema):
     _id = fields.Str()
     name = fields.Str()

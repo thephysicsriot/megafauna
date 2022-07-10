@@ -17,7 +17,7 @@ class ListCharactersView(MethodView):
         json = request.get_json()
         character = Character(**json)
         character.save()
-        return Character.serialize(character)
+        return character.serialize()
 
 
 class GetCharacterView(MethodView):
@@ -25,14 +25,14 @@ class GetCharacterView(MethodView):
     @login_required
     def get(self, pk):
         character = Character.objects(_id=pk).first()
-        return Character.serialize(character)
+        return character.serialize()
 
     @login_required
     def patch(self, pk):
         json = request.get_json()
         character = Character.objects(_id=pk).first()
         character.modify(**json)
-        return Character.serialize(character)
+        return character.serialize()
 
     @login_required
     def delete(self, pk):
